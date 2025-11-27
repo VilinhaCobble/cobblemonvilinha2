@@ -1,13 +1,13 @@
 {
-  "name": "helioslauncher",
-  "version": "2.2.1",
-  "productName": "Helios Launcher",
-  "description": "Modded Minecraft Launcher",
-  "author": "Daniel Scalzi (https://github.com/dscalzi/)",
+  "name": "cobblemonvilinha2",
+  "version": "0.0.1",
+  "productName": "Cobblemon Vilinha2",
+  "description": "Launcher do servidor Cobblemon Vilinha 2",
+  "author": "Daniel Scalzi (https://github.com/dscalzi/) modified by Cobblemon Vilinha 2",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/dscalzi/HeliosLauncher",
+  "homepage": "https://github.com/VilinhaCobble/cobblemonvilinha2",
   "bugs": {
-    "url": "https://github.com/dscalzi/HeliosLauncher/issues"
+    "url": "hhttps://github.com/VilinhaCobble/cobblemonvilinha2/issues"
   },
   "private": true,
   "main": "index.js",
@@ -46,6 +46,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dscalzi/HeliosLauncher.git"
+    "url": "git+https://github.com/VilinhaCobble/cobblemonvilinha2.git"
   }
 }
