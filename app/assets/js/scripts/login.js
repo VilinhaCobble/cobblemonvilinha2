@@ -24,8 +24,7 @@ let lu = false, lp = false
 
 /**
  * Show a login error.
- * 
- * @param {HTMLElement} element The element on which to display the error.
+ * * @param {HTMLElement} element The element on which to display the error.
  * @param {string} value The error text.
  */
 function showError(element, value){
@@ -35,8 +34,7 @@ function showError(element, value){
 
 /**
  * Shake a login error to add emphasis.
- * 
- * @param {HTMLElement} element The element to shake.
+ * * @param {HTMLElement} element The element to shake.
  */
 function shakeError(element){
     if(element.style.opacity == 1){
@@ -48,19 +46,28 @@ function shakeError(element){
 
 /**
  * Validate that an email field is neither empty nor invalid.
- * 
- * @param {string} value The email value.
+ * * @param {string} value The email value.
  */
 function validateEmail(value){
+    // NOVO: Verifica se estamos no modo offline.
+    const offline = typeof isOfflineMode !== 'undefined' && isOfflineMode
+    
     if(value){
-        if(!basicEmail.test(value) && !validUsername.test(value)){
+        // MODO ONLINE: Requer email ou username Minecraft.
+        if(!offline && !basicEmail.test(value) && !validUsername.test(value)){
             showError(loginEmailError, Lang.queryJS('login.error.invalidValue'))
             loginDisabled(true)
             lu = false
+        // MODO OFFLINE: Requer apenas um username Minecraft válido.
+        } else if (offline && !validUsername.test(value)) {
+             showError(loginEmailError, Lang.queryJS('login.error.invalidValue'))
+             loginDisabled(true)
+             lu = false
         } else {
             loginEmailError.style.opacity = 0
             lu = true
-            if(lp){
+            // NOVO: Se estiver offline, ignora a senha e habilita o botão.
+            if(lp || offline){  // Se for offline, lp sempre será tratado como true/irrelevante.
                 loginDisabled(false)
             }
         }
@@ -73,10 +80,20 @@ function validateEmail(value){
 
 /**
  * Validate that the password field is not empty.
- * 
- * @param {string} value The password value.
+ * * @param {string} value The password value.
  */
 function validatePassword(value){
+    // NOVO: Se estivermos no modo offline, a validação de senha é ignorada (lp = true).
+    if (typeof isOfflineMode !== 'undefined' && isOfflineMode) {
+        lp = true;
+        // Se o username estiver válido, habilitamos o botão.
+        if (lu) {
+            loginDisabled(false)
+        }
+        return;
+    }
+    
+    // Lógica Original (para login online).
     if(value){
         loginPasswordError.style.opacity = 0
         lp = true
@@ -110,8 +127,7 @@ loginPassword.addEventListener('input', (e) => {
 
 /**
  * Enable or disable the login button.
- * 
- * @param {boolean} v True to enable, false to disable.
+ * * @param {boolean} v True to enable, false to disable.
  */
 function loginDisabled(v){
     if(loginButton.disabled !== v){
@@ -121,29 +137,33 @@ function loginDisabled(v){
 
 /**
  * Enable or disable loading elements.
- * 
- * @param {boolean} v True to enable, false to disable.
+ * * @param {boolean} v True to enable, false to disable.
  */
 function loginLoading(v){
     if(v){
         loginButton.setAttribute('loading', v)
-        loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.login'), Lang.queryJS('login.loggingIn'))
+        // Correção: Para evitar erro de substituição se o texto não existir
+        loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loginButtonText'), Lang.queryJS('login.loggingIn'))
     } else {
         loginButton.removeAttribute('loading')
-        loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.login'))
+        loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.loginButtonText'))
     }
 }
 
 /**
  * Enable or disable login form.
- * 
- * @param {boolean} v True to enable, false to disable.
+ * * @param {boolean} v True to enable, false to disable.
  */
 function formDisabled(v){
     loginDisabled(v)
     loginCancelButton.disabled = v
     loginUsername.disabled = v
-    loginPassword.disabled = v
+    
+    // NOVO: Se for modo offline, a senha pode estar oculta e não deve ser desabilitada/habilitada.
+    if (!(typeof isOfflineMode !== 'undefined' && isOfflineMode && $(loginPassword.parentElement).is(':hidden'))) {
+        loginPassword.disabled = v
+    }
+    
     if(v){
         checkmarkContainer.setAttribute('disabled', v)
     } else {
@@ -179,7 +199,7 @@ loginCancelButton.onclick = (e) => {
 // Disable default form behavior.
 loginForm.onsubmit = () => { return false }
 
-// Bind login button behavior.
+// Modificado: Bind login button behavior.
 loginButton.addEventListener('click', () => {
     // Disable form.
     formDisabled(true)
@@ -187,7 +207,37 @@ loginButton.addEventListener('click', () => {
     // Show loading stuff.
     loginLoading(true)
 
-    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then((value) => {
+    const username = loginUsername.value
+    const password = loginPassword.value
+    
+    // NOVO: LÓGICA CONDICIONAL DE AUTENTICAÇÃO
+    let authPromise
+    
+    if (typeof isOfflineMode !== 'undefined' && isOfflineMode) {
+        // --- FLUXO DE LOGIN OFFLINE (Guest/Offline) ---
+        
+        // Assumimos que 'AuthManager.addMojangAccount' pode ser substituído
+        // por um método de login offline/convidado, como 'AuthManager.addGuestAccount'.
+        // O nome do método pode variar no Helios Launcher. Vamos assumir que 
+        // existe um método 'addGuestAccount' ou reusaremos 'addMojangAccount' com null para a senha.
+        
+        // Nota: O método de login offline real precisa ser adicionado ao AuthManager.
+        // Se o AuthManager suportar, usaremos:
+        authPromise = AuthManager.addGuestAccount(username)
+        
+        // Se não houver addGuestAccount, precisamos de um Polyfill (Substituto)
+        if (typeof AuthManager.addGuestAccount === 'undefined') {
+            console.warn("AuthManager.addGuestAccount não encontrado. Usando addMojangAccount com senha nula como substituto.")
+             authPromise = AuthManager.addMojangAccount(username, null)
+        }
+
+    } else {
+        // --- FLUXO DE LOGIN ONLINE (Mojang ou Microsoft) ---
+        authPromise = AuthManager.addMojangAccount(username, password)
+    }
+
+    // O restante do código de sucesso/erro usa a 'authPromise'
+    authPromise.then((value) => {
         updateSelectedAccount(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
@@ -203,10 +253,16 @@ loginButton.addEventListener('click', () => {
                 loginViewCancelHandler = null // Reset this for good measure.
                 loginUsername.value = ''
                 loginPassword.value = ''
+                
+                // NOVO: Se o campo de senha foi ocultado, reexibe-o após o login.
+                if (loginPassword.parentElement) {
+                    $(loginPassword.parentElement).show()
+                }
+                
                 $('.circle-loader').toggleClass('load-complete')
                 $('.checkmark').toggle()
                 loginLoading(false)
-                loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.success'), Lang.queryJS('login.login'))
+                loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.success'), Lang.queryJS('login.loginButtonText'))
                 formDisabled(false)
             })
         }, 1000)
