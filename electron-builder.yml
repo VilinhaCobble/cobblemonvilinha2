@@ -1,4 +1,4 @@
-appId: 'cobblemonvilinha2'
+appId: 'helioslauncher'
 productName: 'Cobblemon Vilinha'
 artifactName: '${productName}-setup-${version}.${ext}'
 
