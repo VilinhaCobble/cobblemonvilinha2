@@ -1024,3 +1024,11 @@ async function loadNews(){
 
     return await promise
 }
+
+const newsCloseBtn = document.getElementById('newsCloseBtn')
+if (newsCloseBtn) {
+    newsCloseBtn.onclick = () => {
+        // Simula um clique no botão principal para fechar a tela
+        document.getElementById('newsButton').click()
+    }
+}

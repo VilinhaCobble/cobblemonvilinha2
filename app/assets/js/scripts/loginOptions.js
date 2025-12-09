@@ -2,11 +2,8 @@ const loginOptionsCancelContainer = document.getElementById('loginOptionCancelCo
 const loginOptionMicrosoft = document.getElementById('loginOptionMicrosoft')
 const loginOptionMojang = document.getElementById('loginOptionMojang')
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
-
-// NOVO: Adicione a referência para o botão Offline que estará no HTML.
 const loginOptionOffline = document.getElementById('loginOptionOffline')
 
-// NOVO: Flag para informar que o modo offline foi escolhido.
 let isOfflineMode = false
 let loginOptionsCancellable = false
 
@@ -23,10 +20,10 @@ function loginOptionsCancelEnabled(val){
     }
 }
 
-// Modificado: Garante que a flag offline é DESATIVADA para o fluxo Microsoft.
+// Botão Microsoft
 if (loginOptionMicrosoft) {
     loginOptionMicrosoft.onclick = (e) => {
-        isOfflineMode = false // Desativa a flag
+        isOfflineMode = false
         switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
             ipcRenderer.send(
                 MSFT_OPCODE.OPEN_LOGIN,
@@ -37,68 +34,95 @@ if (loginOptionMicrosoft) {
     }
 }
 
-
-// NOVO: Lógica para o botão de Login Offline.
-// CORREÇÃO: Verificação adicionada para garantir que o elemento existe antes de anexar o evento.
-if (loginOptionOffline) { // <--- ESTA É A CORREÇÃO DE SEGURANÇA.
+// Botão Offline (A LÓGICA MÁGICA ESTÁ AQUI)
+if (loginOptionOffline) {
     loginOptionOffline.onclick = (e) => {
-        isOfflineMode = true // ATIVA a flag offline
+        isOfflineMode = true // Ativa modo offline
         switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
-            // Redireciona para a tela de login clássica para o jogador inserir o nome.
             loginViewOnSuccess = loginOptionsViewOnLoginSuccess
             loginViewOnCancel = loginOptionsViewOnLoginCancel
             loginCancelEnabled(true)
             
-            // OPCIONAL: Esconde o campo de senha, pois não é usado no login offline.
-            // Certifique-se de que loginPassword esteja definido neste escopo (geralmente está em login.js ou escopo global).
-            if (typeof loginPassword !== 'undefined') {
-                loginPassword.value = ''
-                if (loginPassword.parentElement) {
-                    $(loginPassword.parentElement).hide()
-                }
+            // 1. Esconde Senha
+            if (typeof loginPassword !== 'undefined' && loginPassword.parentElement) {
+                loginPassword.parentElement.style.display = 'none'
+            }
+
+            // 2. Muda Placeholder
+            if (typeof loginUsername !== 'undefined') {
+                loginUsername.placeholder = "Nick do Minecraft"
+                loginUsername.value = ''
+            }
+
+            // 3. Esconde Links Extras
+            const forgotPass = document.querySelector('#loginOptions .loginSpanDim')
+            if (forgotPass) forgotPass.style.display = 'none'
+            
+            const registerSpan = document.getElementById('loginRegisterSpan')
+            if (registerSpan) registerSpan.style.display = 'none'
+
+            // 4. ESCONDE O TEXTO CHATO DO RODAPÉ (Disclaimer)
+            const disclaimer = document.getElementById('loginDisclaimer')
+            if (disclaimer) {
+                disclaimer.style.display = 'none'
             }
         })
     }
-} else {
-    // Apenas um log de aviso para o desenvolvedor
-    console.warn("Elemento 'loginOptionOffline' não encontrado. Verifique seu HTML.")
 }
 
-
-// Lógica original para o login Mojang (mantida e não modificada)
+// Botão Mojang (Login Comum)
 if (loginOptionMojang) {
     loginOptionMojang.onclick = (e) => {
-        isOfflineMode = false // Desativa a flag para o login Mojang (online)
+        isOfflineMode = false
         switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
             loginViewOnSuccess = loginOptionsViewOnLoginSuccess
             loginViewOnCancel = loginOptionsViewOnLoginCancel
             loginCancelEnabled(true)
-            // Se for login Mojang, garanta que o campo de senha está visível
+            
+            // Garante que tudo aparece no login normal
             if (typeof loginPassword !== 'undefined' && loginPassword.parentElement) {
-                $(loginPassword.parentElement).show()
+                loginPassword.parentElement.style.display = 'flex'
             }
+            const forgotPass = document.querySelector('#loginOptions .loginSpanDim')
+            if (forgotPass) forgotPass.style.display = 'block'
+            
+            const registerSpan = document.getElementById('loginRegisterSpan')
+            if (registerSpan) registerSpan.style.display = 'block'
+
+            const disclaimer = document.getElementById('loginDisclaimer')
+            if (disclaimer) disclaimer.style.display = 'flex'
         })
     }
 }
 
-
-// Modificado: Reseta a flag offline ao cancelar
+// Botão Cancelar (Restaura tudo ao normal)
 if (loginOptionsCancelButton) {
     loginOptionsCancelButton.onclick = (e) => {
-        isOfflineMode = false // Reseta a flag
+        isOfflineMode = false
         switchView(getCurrentView(), loginOptionsViewOnCancel, 500, 500, () => {
-            // Clear login values (Mojang login)
-            // No cleanup needed for Microsoft.
+            
+            // Restaura campos
             if (typeof loginUsername !== 'undefined') {
                 loginUsername.value = ''
+                loginUsername.placeholder = "E-mail ou Nome de Usuário"
             }
             if (typeof loginPassword !== 'undefined') {
                 loginPassword.value = ''
-                // Se o campo de senha foi escondido para o modo offline, reexibe-o ao voltar
                 if (loginPassword.parentElement) {
-                    $(loginPassword.parentElement).show()
+                    loginPassword.parentElement.style.display = 'flex'
                 }
             }
+
+            // Restaura textos escondidos
+            const forgotPass = document.querySelector('#loginOptions .loginSpanDim')
+            if (forgotPass) forgotPass.style.display = 'block'
+
+            const registerSpan = document.getElementById('loginRegisterSpan')
+            if (registerSpan) registerSpan.style.display = 'block'
+
+            const disclaimer = document.getElementById('loginDisclaimer')
+            if (disclaimer) disclaimer.style.display = 'flex'
+            
             if(loginOptionsViewCancelHandler != null){
                 loginOptionsViewCancelHandler()
                 loginOptionsViewCancelHandler = null

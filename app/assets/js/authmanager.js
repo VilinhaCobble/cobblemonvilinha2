@@ -351,6 +351,15 @@ exports.addMicrosoftAccount = async function(authCode) {
 exports.removeMojangAccount = async function(uuid){
     try {
         const authAcc = ConfigManager.getAuthAccount(uuid)
+
+        // CORREÇÃO: Se for conta Offline, remove direto sem chamar a API da Mojang
+        // (Isso evita o erro que impedia a conta de ser deletada do config)
+        if (authAcc.accessToken === 'ACCESS_TOKEN_OFFLINE') {
+            ConfigManager.removeAuthAccount(uuid)
+            ConfigManager.save()
+            return Promise.resolve()
+        }
+
         const response = await MojangRestAPI.invalidate(authAcc.accessToken, ConfigManager.getClientToken())
         if(response.responseStatus === RestResponseStatus.SUCCESS) {
             ConfigManager.removeAuthAccount(uuid)
@@ -365,7 +374,6 @@ exports.removeMojangAccount = async function(uuid){
         return Promise.reject(err)
     }
 }
-
 /**
  * Remove a Microsoft account. It is expected that the caller will invoke the OAuth logout
  * through the ipc renderer.
@@ -392,6 +400,12 @@ exports.removeMicrosoftAccount = async function(uuid){
  */
 async function validateSelectedMojangAccount(){
     const current = ConfigManager.getSelectedAccount()
+    
+    // CORREÇÃO: Se o token for o nosso código secreto "OFFLINE", finge que tá tudo bem.
+    if(current.accessToken === 'ACCESS_TOKEN_OFFLINE') {
+        return true
+    }
+
     const response = await MojangRestAPI.validate(current.accessToken, ConfigManager.getClientToken())
 
     if(response.responseStatus === RestResponseStatus.SUCCESS) {
@@ -414,7 +428,6 @@ async function validateSelectedMojangAccount(){
             return true
         }
     }
-    
 }
 
 /**

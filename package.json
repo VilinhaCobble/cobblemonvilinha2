@@ -1,23 +1,19 @@
 {
   "name": "cobblemonvilinha2",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "productName": "Cobblemon Vilinha2",
   "description": "Launcher do servidor Cobblemon Vilinha 2",
   "author": "Daniel Scalzi (https://github.com/dscalzi/) modified by Cobblemon Vilinha 2",
   "license": "UNLICENSED",
   "homepage": "https://github.com/VilinhaCobble/cobblemonvilinha2",
   "bugs": {
-    "url": "hhttps://github.com/VilinhaCobble/cobblemonvilinha2/issues"
+    "url": "https://github.com/VilinhaCobble/cobblemonvilinha2/issues"
   },
   "private": true,
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder build",
-    "dist:win": "npm run dist -- -w",
-    "dist:mac": "npm run dist -- -m",
-    "dist:linux": "npm run dist -- -l",
-    "lint": "eslint --config .eslintrc.json ."
+    "dist": "electron-builder"
   },
   "engines": {
     "node": "20.x.x"
@@ -39,11 +35,6 @@
     "semver": "^7.6.3",
     "toml": "^3.0.0",
     "uuid": "^13.0.0"
-  },
-  "devDependencies": {
-    "electron": "^33.2.1",
-    "electron-builder": "^25.1.8",
-    "eslint": "^8.57.1"
   },
   "repository": {
     "type": "git",

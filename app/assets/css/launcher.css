@@ -1,6 +1,13 @@
 /* Github Code Highlighting. */
 @import "../../../node_modules/github-syntax-dark/lib/github-dark.css";
 
+:root {
+    --rosa-principal: #ff4d94;
+    --rosa-hover:     #ff70b0;
+    --rosa-active:    #ff1f7a;
+    --rosa-disabled:  #ff99c2;
+    --rosa-sombra:    rgba(255, 77, 148, 0.6);
+}
 /*******************************************************************************
  *                                                                             *
  * Fonts                                                                       *
@@ -3024,15 +3031,37 @@ input:checked + .toggleSwitchSlider:before {
     -webkit-user-select: initial;
 }
 
-/* Social media icon content container. */
+#rightContainer {
+    position: static !important;
+}
+
+/* 2. Posicionamos o menu na esquerda absoluta da tela */
 #mediaContent {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    margin-top: 25px;
-    height: calc(100% - 95px);
-    width: 70px;
-    align-items: center;
+    padding: 15px 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: auto !important;
+    min-height: 0 !important;
+    
+    /* Configurações de Posição */
+    position: absolute !important; 
+    left: 20px !important;       /* Distância da borda esquerda */
+    right: auto !important;      /* Anula a posição direita */
+    margin-right: 0 !important;
+    z-index: 100;
+}
+
+/* 3. Corrigimos a posição dos balões de texto (tooltips) para aparecerem à DIREITA dos ícones */
+#settingsTooltip {
+    right: auto !important;
+    left: 140% !important; /* Joga o balão para a direita do ícone */
+}
+
+/* 4. Corrigimos a setinha do balão para apontar para a esquerda (na direção do ícone) */
+#settingsTooltip::after {
+    left: -10px !important; /* Posiciona a seta no lado esquerdo do balão */
+    right: auto !important;
+    border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent !important; /* Cria o triângulo apontando para a esquerda */
 }
 
 /* Social Media Icon division containers. */
@@ -3964,5 +3993,253 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Class which is applied when the spinner image is spinning. */
 .rotating {
-    animation: rotating 10s linear infinite;
+    animation: rotating 120s linear infinite;
+}
+
+/* ==========================================================================
+   HELIOS LAUNCHER - TEMA VILINHA (FINAL - SEM NOTÍCIAS)
+   ========================================================================== */
+
+:root {
+    --rosa-principal: #ff4d94;
+    --rosa-hover:     #ff70b0;
+    --rosa-active:    #ff1f7a;
+    --rosa-sombra:    rgba(255, 77, 148, 0.6);
+}
+
+/* --- 0. REMOÇÃO DE ITENS EXTRAS --- */
+.bot_divider, .mediaDivider { display: none !important; }
+
+/* REMOÇÃO DE ÍCONES DA SOCIAL BAR */
+#instagramURL,
+#youtubeURL,
+#githubURL, #gitURL, #sourceURL,
+#websiteURL, #siteURL, #linkURL,
+#wikiURL, #storeURL, #redditURL, #facebookURL {
+    display: none !important;
+}
+
+/* --- 1. MENU LATERAL (SOCIAL BAR) --- */
+#rightContainer { position: static !important; }
+
+#mediaContent {
+    padding: 10px 5px;
+    top: 60% !important; 
+    transform: translateY(-50%);
+    height: auto !important; min-height: 0 !important;
+    position: absolute !important; 
+    left: 20px !important;       
+    right: auto !important;      
+    margin-right: 0 !important;
+    z-index: 100;
+    
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 77, 148, 0.3);
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important; 
+}
+
+#settingsTooltip { right: auto !important; left: 140% !important; }
+#settingsTooltip::after {
+    left: -10px !important; right: auto !important;
+    border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent !important;
+}
+
+/* --- 2. LOGO E USUÁRIO --- */
+
+/* LOGO NA DIREITA (COM FUNDO ROSA) */
+#image_seal_container {
+    position: absolute !important;
+    right: 30px !important; left: auto !important;
+    top: 30px !important; margin: 0 !important;
+    transform: none !important; z-index: 50;
+
+    background: rgba(0, 0, 0, 0.5) !important; 
+    backdrop-filter: blur(5px) !important;
+    border: 2px solid var(--rosa-principal) !important;
+    border-radius: 30px !important; 
+    box-shadow: 0 0 20px var(--rosa-sombra) !important; 
+    padding: 10px !important;
+    
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Nick/Avatar na ESQUERDA */
+#user_content {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 77, 148, 0.3);
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    padding: 5px 15px 5px 20px; 
+    display: flex; align-items: center; gap: 15px;
+
+    position: absolute !important;
+    left: 30px !important; right: auto !important;
+    top: 40px !important; margin: 0 !important;
+    z-index: 50;
+}
+
+#avatarContainer {
+    border: 2px solid var(--rosa-principal) !important;
+    height: 60px !important; width: 60px !important; margin: 0 !important;
+}
+#user_text { position: static !important; margin: 0 !important; font-size: 16px !important; }
+
+/* --- 3. BOTÃO DE NOTÍCIAS (REMOVIDO) --- */
+#newsButton {
+    display: none !important; /* Esconde o botão */
+}
+
+/* --- 4. ÁREA CENTRAL --- */
+#landingContainer > #lower { position: relative; }
+#landingContainer > #lower > #left,
+#landingContainer > #lower > #center,
+#landingContainer > #lower > #right {
+    width: auto !important; height: auto !important;
+    position: absolute !important;
+}
+#landingContainer > #lower > #center { display: none !important; }
+
+#landingContainer > #lower > #left {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 170px !important; 
+    z-index: 200; top: auto !important; margin: 0 !important;
+}
+#landingContainer > #lower > #left #content {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 60px !important; 
+}
+
+/* PLAYER COUNT VERDE */
+#player_count {
+    font-size: 14px !important; 
+    color: #43c628 !important;
+    font-weight: 900 !important;
+}
+#mojangStatusNETitle {
+    font-size: 11px !important; 
+    color: white !important;
+}
+
+#landingContainer > #lower > #right {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: 60px !important; 
+    z-index: 100; top: auto !important;
+    justify-content: center !important;
+    display: flex !important;
+}
+
+#launch_content {
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; margin: 0 !important;
+}
+
+#server_selection_button {
+    order: 1 !important; margin: 0 !important;
+    margin-bottom: 10px !important; 
+    font-size: 11px !important;
+    background: rgba(0,0,0,0.4) !important; 
+    padding: 4px 10px !important;
+    border-radius: 10px; color: #ddd !important;
+}
+
+#launch_button {
+    order: 2 !important; margin: 0 !important;
+    background: linear-gradient(135deg, var(--rosa-principal), var(--rosa-active));
+    color: white !important;
+    padding: 15px 50px;
+    border-radius: 50px;
+    font-size: 22px; font-weight: bold;
+    text-transform: uppercase; letter-spacing: 2px;
+    box-shadow: 0 0 15px var(--rosa-sombra);
+    transition: all 0.2s;
+    animation: pulsar-rosa 2s infinite;
+}
+#launch_button:hover { transform: translateY(-2px); box-shadow: 0 0 30px var(--rosa-principal); }
+
+/* --- 5. EXTRAS --- */
+@keyframes pulsar-rosa {
+    0% { box-shadow: 0 0 0 0 rgba(255, 77, 148, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 77, 148, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 77, 148, 0); }
+}
+
+#launch_progress[value]::-webkit-progress-value { background-color: var(--rosa-principal); }
+input:checked + .toggleSwitchSlider { background-color: var(--rosa-principal); border-color: var(--rosa-hover); }
+
+#landingContainer::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.8) 100%);
+    z-index: 0;
+}
+#upper, #lower { z-index: 1; position: relative; }
+
+/* --- 6. TELA DE LOGIN --- */
+#loginForm {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 77, 148, 0.3);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+#loginButton {
+    width: 250px !important;
+    margin-top: 15px !important;
+    right: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: linear-gradient(135deg, var(--rosa-principal), var(--rosa-active)) !important;
+    color: white !important;
+    border-radius: 50px !important;
+    font-weight: bold !important;
+    letter-spacing: 2px !important;
+    box-shadow: 0 0 15px var(--rosa-sombra) !important;
+    transition: all 0.2s !important;
+    border: none !important;
+    padding: 15px 0 !important;
+}
+#loginButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--rosa-principal) !important;
+}
+
+.loginField {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5) !important;
+    transition: 0.3s;
+}
+.loginField:focus {
+    border-bottom-color: var(--rosa-principal) !important;
+    box-shadow: 0 5px 10px -5px var(--rosa-sombra);
+}
+
+#checkmarkContainer input:checked ~ .loginCheckmark {
+    background-color: var(--rosa-principal) !important;
+    border-color: var(--rosa-principal) !important;
+}
+
+#loginCancelIcon:hover {
+    border-color: var(--rosa-principal) !important;
+    color: var(--rosa-principal) !important;
+    box-shadow: 0 0 10px var(--rosa-principal) !important;
+    text-shadow: 0 0 10px var(--rosa-principal) !important;
 }
