@@ -4414,3 +4414,39 @@ input:checked + .toggleSwitchSlider { background-color: var(--rosa-principal); b
     display: none !important;
     pointer-events: none !important;
 }
+
+/* --- ESTILO DE "UPDATE DISPONÍVEL" (PULSAR ROSA) --- */
+
+/* Sobrescreve a animação verde padrão para Rosa */
+#image_seal_container[update]:before,
+#image_seal_container[update]:after {
+    box-shadow: 0 0 20px var(--rosa-principal) !important;
+    background: rgba(255, 77, 148, 0.2) !important; /* Leve fundo rosa */
+    border: 1px solid var(--rosa-active) !important;
+    
+    /* Mantém a animação de pulsar */
+    animation: glow-grow 2s ease-out infinite !important;
+}
+
+/* Muda a cor do balãozinho "Atualização Disponível" para Rosa */
+#updateAvailableTooltip {
+    background-color: var(--rosa-principal) !important;
+    color: white !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5) !important;
+}
+
+/* Muda a cor da setinha do balão */
+#updateAvailableTooltip::after {
+    border-color: transparent transparent var(--rosa-principal) transparent !important;
+}
+
+/* Centralizar o Tooltip de Atualização */
+#updateAvailableTooltip {
+    left: 50% !important;  /* Empurra o começo do balão para o meio do ícone */
+    transform: translateX(-50%) !important; /* Puxa o balão de volta pela metade do tamanho dele */
+    
+    /* Ajustes opcionais para o texto ficar mais bonito */
+    width: auto !important;      /* Deixa a largura automática */
+    min-width: 120px !important; /* Garante que não fique muito espremido */
+    text-align: center !important;
+}
