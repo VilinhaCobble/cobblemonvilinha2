@@ -3222,7 +3222,7 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 4px;
     position: absolute;
     z-index: 1;
-    right: 130%;
+    right: 140%;
     font-size: 12px;
     line-height: 20px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
@@ -4168,7 +4168,24 @@ input:checked + .toggleSwitchSlider:before {
     gap: 10px !important; 
 }
 
-#settingsTooltip { right: auto !important; left: 140% !important; }
+/* Tooltips do menu lateral (CORREÇÃO DE LARGURA) */
+
+#settingsTooltip { 
+    right: auto !important; 
+    left: 140% !important; 
+    
+    
+    width: auto !important;          /* Permite que o balão cresça */
+    min-width: auto !important;     /* Tamanho mínimo para caber a palavra */
+    padding: 0 10px !important;      /* Espacinho nas laterais */
+    white-space: nowrap !important;  /* Garante que o texto não quebre em duas linhas */
+}
+
+#settingsTooltip::after {
+    left: -10px !important; 
+    right: auto !important;
+    border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent !important;
+}
 #settingsTooltip::after {
     left: -10px !important; right: auto !important;
     border-color: transparent rgba(0, 0, 0, 0.75) transparent transparent !important;
