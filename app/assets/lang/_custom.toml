@@ -1,7 +1,7 @@
 # Custom Language File for Launcher Customizer
 
 [ejs.app]
-title = "Cobblemon Vilinha 2"
+title = "Cobblemon Vilinha"
 
 [ejs.landing]
 mediaGitHubURL = "https://github.com/dscalzi/HeliosLauncher"
@@ -16,5 +16,5 @@ supportLink = "https://github.com/dscalZi/HeliosLauncher/issues"
 
 [ejs.welcome]
 welcomeHeader = "BEM VINDO AO COBBLEMON VILINHA"
-welcomeDescription = "COBBLEMON VILINHA (AGORA EM SUA SEGUNDA TEMPORADA) É UM SERVIDOR NÃO COMPETITIVO QUE TEM COMO OBJETIVO CRIAR UMA COMUNIDADE AMIGÁVEL E ÚNICA EM UM MUNDO POKEMON RP."
+welcomeDescription = "COBBLEMON VILINHA É UM SERVIDOR NÃO COMPETITIVO QUE TEM COMO OBJETIVO CRIAR UMA COMUNIDADE AMIGÁVEL E ÚNICA EM UM MUNDO POKEMON RP."
 welcomeDescCTA = "SÓ MAIS ALGUNS CLIQUES PARA ENTRAR NO MUNDO DE VILINHA"
